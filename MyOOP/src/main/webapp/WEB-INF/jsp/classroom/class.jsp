@@ -205,8 +205,8 @@
 							<td>${class.kip }</td>
 							<td>${class.classAmount }</td>
 							<td>${class.testRoom }</td>
+							<sec:authorize access="hasAnyAuthority('ADMIN')">							
 							<td><a href="${pageContext.request.contextPath }/classes/details/${class.classId}">Details</a></td>
-							<sec:authorize access="hasAnyAuthority('ADMIN')">
 							<td><a href="${pageContext.request.contextPath }/classes/initUpdate.htm?classId=${class.classId }" class="edit">
 								
 								<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a> 
@@ -270,7 +270,7 @@
 	<a href="${pageContext.request.contextPath }/excel/download" class="btn btn-primary btn-lg active"
 	 role="button" aria-pressed="true" style="margin: 10px;">Download</a>
 	 <!-- upload  -->
-	
+	<sec:authorize access="hasAnyAuthority('ADMIN')">
 	<f:form action="${pageContext.request.contextPath }/excel/upload" style="margin-left: 10px;" method="post" enctype="multipart/form-data">
 		
         <input id="getExcel" class="excel" type="file" name = "excelFile" value="Chon tep" style="display: none;">
@@ -279,6 +279,7 @@
 		<input id='chosen-file'  value="No chosen File" readonly></input>
 		<input class="excel" type="submit" value="Upload">
 	</f:form>
+	</sec:authorize>
     </div>
 	<script>
 		const fileChosen=document.getElementById("chosen-file");

@@ -115,12 +115,12 @@
 						<div class="row">
 							<div class="col-lg-6 col-md-6 col-sm-12 p-0">
 								<input type="text" class="form-control search-slt" name = "name"
-									placeholder="Enter Pickup City">
+									placeholder="Tim theo ten giang vien">
 							</div>
 							<div class="col-lg-3 col-md-3 col-sm-12 p-0">
 								<select class="form-control search-slt"
 									id="exampleFormControlSelect1">
-									<option>Select Vehicle</option>
+									<option>Select</option>
 									<option>Example one</option>
 									<option>Example one</option>
 									<option>Example one</option>

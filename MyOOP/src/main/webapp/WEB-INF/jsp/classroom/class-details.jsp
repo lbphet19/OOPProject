@@ -154,7 +154,7 @@
 							<td>${myClass.kip }</td>
 							<td>${myClass.classAmount }</td>
 							<td>${myClass.testRoom }</td>
-							<td><a href="${pageContext.request.contextPath }/classes/initUpdate.htm?classId=${class.classId }" class="edit">
+							<td><a href="${pageContext.request.contextPath }/classes/initUpdate.htm?classId=${myClass.classId }" class="edit">
 								<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a> 
 								<a href="#deleteClassModal" class="delete" data-toggle="modal">
 								<i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
@@ -167,22 +167,22 @@
 		</div>
 	</div>
 	<!-- lop trong thi -->
-	<h1>Danh sach giam thi coi thi</h1>
+	<h1>Danh sách giám thị coi thi</h1>
 	<table class="table table-striped table-hover">
 	<thead>
-	<th></th>
-					<th>Ho va Ten</th>
-					<th>Mon hoc Giang day</th>
-					<th>So dien thoai</th>
+	<th>ID</th>
+					<th>Họ và Tên</th>
+					<th>Môn học Giảng dạy</th>
+					<th>Số điện thoại</th>
 					<th>Email</th>
 					<th>
-					Xoa giam thi
+					Action
 					</th>
 		</thead>
 		<tbody>	
 			<c:forEach items="${myClass.canBoCoiThi}" var="emp">
 				<tr>
-					<td></td>
+					<td>${emp.employeeId }</td>
 					<td>${emp.employeeName }</td>
 					<td>${emp.subject }</td>
 					<td>${emp.phoneNumber }</td>
@@ -212,6 +212,29 @@
 					<input type="submit" value="Change">
 					<input type="hidden" name="classId"	value="${myClass.classId }">
 	</f:form>
+<!-- test -->
+	<h1>Giảng viên lớp học</h1>
+	<table class="table table-striped table-hover">
+					<tbody>
+					       <tr>
+							<td>Mã giảng viên</td>
+							<td>Tên giảng viên</td>
+							<td>Họ và tên</td>
+							<td>Môn học giảng dạy</td>
+							<td>Số điện thoại</td>
+							<td>Email</td>
+							</tr>
+							<tr>
+							<td>${myClass.employee.employeeId }</td>
+							<td>${myClass.employee.employeeName}</td>
+							<td>${myClass.employee.subject}</td>
+							<td>${myClass.employee.phoneNumber}</td>
+							<td>${myClass.employee.email}</td>
+							
+							</tr>
+					</tbody>
+							
+				</table>
 	<!-- for each element -> nut delete /{id}  -->
 	<!-- Delete Modal HTML -->
 	<div id="deleteClassModal" class="modal fade">

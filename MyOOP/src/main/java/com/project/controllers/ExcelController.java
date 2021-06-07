@@ -46,7 +46,7 @@ public class ExcelController {
 				e.printStackTrace();
 				return "error:error";
 			}
-		}
+		}	
 		return "redirect:/classes/get/1";
 	}
 	@GetMapping(value = "/download")
