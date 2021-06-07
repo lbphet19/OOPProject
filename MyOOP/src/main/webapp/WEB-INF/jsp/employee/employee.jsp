@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="f"%>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +25,7 @@
 <!-- <link rel="stylesheet" href="css/class_style.css"> -->
 <c:url value="/css/class/class_style.css" var="jstlCss" />
 <link href="${jstlCss}" rel="stylesheet" >
+<%-- <link href="<c:url value = '/resources/css/class-style.css'></c:url>"> --%>
 <!-- <link rel="stylesheet" href="/css/class/class_style.css"> -->
 <script>
 	$(document).ready(function() {
@@ -74,6 +77,7 @@
 </script>
 </head>
 <body>
+<jsp:include page=".././header/header.jsp"></jsp:include>
 	<div class="container">
 		<div class="table-responsive">
 			<div class="table-wrapper">
@@ -85,6 +89,7 @@
 								<a href="${pageContext.request.contextPath }/employee/listEmp.htm/1">Manage <b>Employees</b></a>
 							</h2>
 						</div>
+						<sec:authorize access="hasAnyAuthority('ADMIN')">
 						<div class="col-xs-6">
 							<a href="#addEmployeeModal" class="btn btn-success"
 								data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add
@@ -92,6 +97,13 @@
 								class="btn btn-danger" data-toggle="modal"><i
 								class="material-icons">&#xE15C;</i> <span>Delete</span></a>
 						</div>
+						</sec:authorize>
+<%-- 						<sec:authorize access="hasAnyAuthority('USER')"> --%>
+<!-- 							<div class = "col-xs-6"> -->
+<%-- 								<a id = "userDetails" href="${pageContext.request.contextPath }/employee/details/<sec:authentication property="principal.employeeId" /> "> --%>
+<!-- 								User Details</a> -->
+<!-- 							</div> -->
+<%-- 						</sec:authorize> --%>
 					</div>
 				</div>
 				<br>
@@ -153,13 +165,17 @@
 								<td>${employee.phoneNumber }</td>
 								<td>${employee.email }</td>
 								<td>${employee.office }</td>
+								<sec:authorize access="hasAnyAuthority('ADMIN')">
 								<td><a href="${pageContext.request.contextPath }/employee/details/${employee.employeeId }">Details</a></td>
+								</sec:authorize>
+								<sec:authorize access="hasAnyAuthority('ADMIN')">
 								<td><a href="#editEmployeeModal" class="edit"
 									data-toggle="modal"><i class="material-icons"
 										data-toggle="tooltip" title="Edit">&#xE254;</i></a> <a
 									href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
 										class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
 									<input type="hidden" id="empId" value="${employee.employeeId }"></td>
+								</sec:authorize>
 							</tr>
 							<!-- <input 
 									type="hidden" id="updateEmpId" value="${employee.employeeId }">  -->
@@ -224,7 +240,7 @@
 	<div id="addEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="${pageContext.request.contextPath }/employee/save" method="post">
+				<f:form action="${pageContext.request.contextPath }/employee/save" method="post">
 					<div class="modal-header">
 						<h4 class="modal-title">Add Employee</h4>
 						<button type="button" class="close" data-dismiss="modal"
@@ -257,7 +273,7 @@
 							value="Cancel"> <input type="submit"
 							class="btn btn-success" value="Add">
 					</div>
-				</form>
+				</f:form>
 			</div>
 		</div>
 	</div>
@@ -265,7 +281,7 @@
 	<div id="editEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="${pageContext.request.contextPath }/employee/put" method="post">
+				<f:form action="${pageContext.request.contextPath }/employee/put" method="post">
 					<div class="modal-header">
 						<h4 class="modal-title">Edit Employee</h4>
 						<button type="button" class="close" data-dismiss="modal"
@@ -300,7 +316,7 @@
 							value="Cancel"> <input type="submit" class="btn btn-info"
 							value="Save"> <input type="hidden" name = "update_id" id="update_id">
 					</div>
-				</form>
+				</f:form>
 			</div>
 		</div>
 	</div>
@@ -309,7 +325,7 @@
 	<div id="deleteEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="${pageContext.request.contextPath }/employee/delete"
+				<f:form action="${pageContext.request.contextPath }/employee/delete"
 					method="post">
 					<div class="modal-header">
 						<h4 class="modal-title">Delete Employee</h4>
@@ -328,7 +344,7 @@
 							class="btn btn-danger" value="Delete"> <input
 							type="hidden" id="deleteId" name="id">
 					</div>
-				</form>
+				</f:form>
 			</div>
 		</div>
 	</div>

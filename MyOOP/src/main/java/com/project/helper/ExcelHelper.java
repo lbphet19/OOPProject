@@ -19,15 +19,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.entities.Class;
+import com.project.services.ClassService;
+import com.project.services.ClassServiceImp;
 
 public class ExcelHelper {
+//	@Autowired
+	private ClassService classService = new ClassServiceImp();
 	  Workbook workbook = new XSSFWorkbook();
 	  public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	  static String[] HEADERS = { "Mã lớp", "Mã HP", "Tên HP", "Ghi chú","Nhóm","Đợt mở","Tuần","Thứ","Ngày thi","Kíp","SLĐK","Phòng thi"};
@@ -50,7 +56,16 @@ public class ExcelHelper {
 		  return dateFormat.format(date);
 	  }
 	  public String toDateFormat(String s) {
-		  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		  SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+		  if(s.contains(".")) {
+		  simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		  }
+		  else if (s.contains("-")) {
+			  simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		  }
+		  else if(s.contains("/")) {
+			  simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		  }
 		  Date actualDate = new Date();
 		  try {
 			actualDate = simpleDateFormat.parse(s);
@@ -87,39 +102,155 @@ public class ExcelHelper {
 				Cell currentCell = cells.next();
 				switch (cellIndex) {
 				case 0:
+					if(currentCell.getCellType().equals(CellType.FORMULA)) {
+						switch(currentCell.getCachedFormulaResultType()) {
+						case NUMERIC:
+							_class.setClassId(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+							break;
+						case STRING:
+							_class.setClassId(String.valueOf(currentCell.getRichStringCellValue()));
+							break;
+						}
+					}
+//					System.out.println(String.valueOf(currentCell.getNumericCellValue()));
+					else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
 					_class.setClassId(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+					}
+					else {
+					_class.setClassId(currentCell.getStringCellValue());
+					}
 					break;
 				case 1:
+					if(currentCell.getCellType().equals(CellType.FORMULA)) {
+						switch(currentCell.getCachedFormulaResultType()) {
+						case NUMERIC:
+							_class.setModuleId(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+							break;
+						case STRING:
+							_class.setModuleId(String.valueOf(currentCell.getRichStringCellValue()));
+							break;
+						}
+					}
+//					System.out.println(currentCell.getStringCellValue());
+					else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+						_class.setModuleId(String.valueOf(currentCell.getNumericCellValue()));
+					}
+					else {
 					_class.setModuleId(currentCell.getStringCellValue());
+					}
 					break;
 				case 2:
+//					System.out.println(currentCell.getStringCellValue());
 					_class.setModuleName(currentCell.getStringCellValue());
 					break;
 				case 3:
+//					System.out.println(currentCell.getStringCellValue());
 					_class.setDescriptions(currentCell.getStringCellValue());
 					break;
 				case 4:
+					if(currentCell.getCellType().equals(CellType.FORMULA)) {
+						switch(currentCell.getCachedFormulaResultType()) {
+						case NUMERIC:
+							_class.setClassGroup(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+							break;
+						case STRING:
+							_class.setClassGroup(String.valueOf(currentCell.getRichStringCellValue()));
+							break;
+						}
+					}
+//					System.out.println(currentCell.getStringCellValue());
+					else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+						_class.setClassGroup(String.valueOf(currentCell.getNumericCellValue()));
+					}
+					else {
 					_class.setClassGroup(currentCell.getStringCellValue());
+					}
 					break;
-				case 5:	
+				case 5:
+					if(currentCell.getCellType().equals(CellType.FORMULA)) {
+						switch(currentCell.getCachedFormulaResultType()) {
+						case NUMERIC:
+							_class.setOpenTime(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+							break;
+						case STRING:
+							_class.setOpenTime(String.valueOf(currentCell.getRichStringCellValue()));
+							break;
+						}
+					}
+					else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+						_class.setOpenTime(String.valueOf(currentCell.getNumericCellValue()));
+					}
+//					System.out.println(currentCell.getStringCellValue());
+					else {
 					_class.setOpenTime(currentCell.getStringCellValue());
+					}
 					break;
 				case 6:
+					if(currentCell.getCellType().equals(CellType.FORMULA)) {
+						switch(currentCell.getCachedFormulaResultType()) {
+						case NUMERIC:
+							_class.setWeek(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+							break;
+						case STRING:
+							_class.setWeek(String.valueOf(currentCell.getRichStringCellValue()));
+							break;
+						}
+					}
+					else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+						_class.setWeek(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+					}
+					else {
 					_class.setWeek(currentCell.getStringCellValue());
+					}
 					break;
 				case 7:
+					if(currentCell.getCellType().equals(CellType.FORMULA)) {
+						switch(currentCell.getCachedFormulaResultType()) {
+						case NUMERIC:
+							_class.setDayOfWeek(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+							break;
+						case STRING:
+							_class.setDayOfWeek(String.valueOf(currentCell.getRichStringCellValue()));
+							break;
+						}
+					}
+					else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+						_class.setDayOfWeek(String.valueOf(currentCell.getNumericCellValue()));
+					}
+//					System.out.println(currentCell.getStringCellValue());
+					else {
 					_class.setDayOfWeek(currentCell.getStringCellValue());
+					}
 					break;
 				case 8:
+//					System.out.println(currentCell.getStringCellValue());
 					_class.setTestDay(toDateFormat(currentCell.getStringCellValue()));
 					break;
 				case 9:
+					if(currentCell.getCellType().equals(CellType.FORMULA)) {
+						switch(currentCell.getCachedFormulaResultType()) {
+						case NUMERIC:
+							_class.setKip(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue())));
+							break;
+						case STRING:
+							_class.setKip(String.valueOf(currentCell.getRichStringCellValue()));
+							break;
+						}
+					}
+					else if(currentCell.getCellType().equals(CellType.NUMERIC)) {
+						_class.setKip(String.valueOf(formatDoubleToInt(String.valueOf(currentCell.getNumericCellValue()))));
+					}
+//					System.out.println(currentCell.getStringCellValue());
+					else {
 					_class.setKip(currentCell.getStringCellValue());
+					}
 					break;
 				case 10:
+//					System.out.println((int)currentCell.getNumericCellValue());
 					_class.setClassAmount((int)currentCell.getNumericCellValue());
 					break;
 				case 11:
+//					System.out.println(currentCell.getStringCellValue());
 					_class.setTestRoom(currentCell.getStringCellValue());
 					break;
 				default:
@@ -160,7 +291,7 @@ public class ExcelHelper {
 				  row.createCell(5).setCellValue(c.getOpenTime());
 				  row.createCell(6).setCellValue(c.getWeek());
 				  row.createCell(7).setCellValue(c.getDayOfWeek());
-				  row.createCell(8).setCellValue(c.getTestDay());
+				  row.createCell(8).setCellValue(classService.formatDateToExcel(c.getTestDay()));
 				  row.createCell(9).setCellValue(c.getKip());
 				  row.createCell(10).setCellValue(c.getClassAmount());
 				  row.createCell(11).setCellValue(c.getTestRoom());

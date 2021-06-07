@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.entities.Class;
 import com.project.entities.Employee;
+import com.project.repositories.EmployeeRepository;
 import com.project.services.ClassService;
 import com.project.services.EmployeeService;
 @Controller
@@ -28,6 +29,8 @@ public class ClassController {
 	private ClassService classService;
 	@Autowired
 	private EmployeeService empService;
+	@Autowired
+	private EmployeeRepository empRepo;
 	@RequestMapping(value = "/get/{pageNumber}")
 	public String get(@PathVariable(name = "pageNumber") int pageNumber,
 			@RequestParam(name = "keyword", required = false) String keyword,
@@ -42,18 +45,21 @@ public class ClassController {
 		else {
 			pageable = PageRequest.of(pageNumber-1, 8, Direction.ASC, sortBy);
 		}
-		if(keyword == null) {
+		if(keyword == null || keyword.equals("")) {
 			page = classService.get(pageable);
 		}
 		else {
-			if(findBy==null) {
-				page=classService.findByModuleIdAndModuleName(keyword, pageable);
+			if(findBy==null || findBy.equals("")) {
+				page=classService.findByModuleIdAndModuleNameAndClassId(keyword, pageable);
 			}
 			else if(findBy.equals("moduleId")) {
 			page = classService.findByModuleId(keyword, pageable);
 			}
 			else if(findBy.equals("moduleName")){
 				page = classService.findByModuleName(keyword, pageable);
+			}
+			else if(findBy.equals("classId")) {
+				page = classService.findByClassId(keyword, pageable);
 			}
 			else {
 				return "error/error";
@@ -76,6 +82,7 @@ public class ClassController {
 	public String getClassDetails(@PathVariable("id") String classId, Model model) {
 		try {
 			Class _class = classService.getById(classId);
+			System.out.println(classService.formatDateToExcel(_class.getTestDay()));
 			model.addAttribute("myClass", _class);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,6 +109,10 @@ public class ClassController {
 		try {
 			myClass = classService.getById(classId);
 			Employee emp = empService.findById(Integer.parseInt(empId));
+			int maxCanbo;
+			if(myClass.getClassAmount()>50)maxCanbo=2;
+			else maxCanbo=1;
+			if(myClass.getCanBoCoiThi().size()>=maxCanbo)return  "redirect:/classes/details/"+classId;
 			myClass.getCanBoCoiThi().add(emp);
 			emp.getClasses().add(myClass);
 //			System.out.println(emp);
@@ -125,6 +136,13 @@ public class ClassController {
 	}
 	@RequestMapping(value = "/delete")
 	public String delete(@RequestParam(name = "deleteId") String id) {
+		Class _class = classService.getById(id);
+		List<Employee> listEmp = empRepo.findAll();
+		for(Employee e:listEmp) {
+			if(e.getClasses().contains(_class)) {
+				e.getClasses().remove(_class);
+			}
+		}
 		classService.deleteClass(id);
 		return "redirect:/classes/get/1";
 	}

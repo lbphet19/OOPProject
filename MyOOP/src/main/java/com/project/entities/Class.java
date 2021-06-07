@@ -60,6 +60,9 @@ public class Class {
 //	phòng thi
 	@Column(name = "TestRoom")
 	private String testRoom;
+//	status
+	@Column(name="Status")
+	private String status;
 //	can bo coi thi
 	@JsonIgnore
 	@ManyToMany(mappedBy = "classes", cascade = CascadeType.MERGE)
@@ -142,6 +145,13 @@ public class Class {
 	}
 	public String getTestRoom() {
 		return testRoom;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public void setTestRoom(String testRoom) {
 		this.testRoom = testRoom;

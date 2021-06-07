@@ -29,17 +29,22 @@ public class ExcelController {
 	private ClassService classService;
 	@PostMapping(value = "/upload",headers=("content-type=multipart/*"))
 	public String uploadExcelFile(@RequestParam("excelFile")MultipartFile file) {
+		System.out.println("success");
 		ExcelHelper helper = new ExcelHelper();
 		if(helper.hasExcelFormat(file)) {
 			try {
+				System.out.println("success");
 				Set<Class> classes = exService.getClassesFromExcel(file);
 				List<Class> oldList = classService.get();
 				classes.removeAll(oldList);
 				for(Class c : classes) {
+					System.out.println(c);
 					classService.save(c);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				e.printStackTrace();
+				return "error:error";
 			}
 		}
 		return "redirect:/classes/get/1";

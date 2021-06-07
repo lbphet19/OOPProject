@@ -38,6 +38,9 @@ public class Employee {
 	private String phoneNumber;
 	@Column(name = "Email")
 	private String email;
+	//datratien
+		@Column(name="DaTra")
+		private boolean datra;
 //	phong lam viec
 	@Column(name = "Office")
 	private String office;
@@ -106,6 +109,13 @@ public class Employee {
 	}
 	public String getPhoneNumber() {
 		return phoneNumber;
+	}
+	
+	public boolean isDatra() {
+		return datra;
+	}
+	public void setDatra(boolean datra) {
+		this.datra = datra;
 	}
 	public void setPhoneNumber(String number) {
 		this.phoneNumber = number;

@@ -8,7 +8,8 @@ import java.util.Set;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.project.entities.Class;
 import com.project.helper.ExcelHelper;
@@ -17,8 +18,9 @@ import com.project.services.ClassServiceImp;
 
 
 @SpringBootApplication
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MyOopApplication {
-
+//	public static 
 	public static void main(String[] args) {
 //		Set<Class> set = new HashSet<Class>();
 //		Class c1 = new Class();
@@ -46,6 +48,12 @@ public class MyOopApplication {
 //			System.out.println(c);
 //		}
 //		System.out.println(helper.DateToString(date));
+//		ExcelHelper h = new ExcelHelper();
+//		System.out.println(h.toDateFormat("22-12-2020"));
+		 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	        String encodedPassword = passwordEncoder.encode("123456");
+	         
+	        System.out.println(encodedPassword);
 		SpringApplication.run(MyOopApplication.class, args);
 	}
 	

@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 	<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 	<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+	<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 	<%@taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,6 +75,7 @@
 </script>
 </head>
 <body>
+<jsp:include page=".././header/header.jsp"></jsp:include>
 	<div class="container-fluid">
 		<div class="table-responsive">
 			<div class="table-wrapper">
@@ -139,6 +141,7 @@
 					</thead>
 					<tbody>
 						<tr>
+							<td></td>
 							<td>${myClass.classId }</td>
 							<td>${myClass.moduleId }</td>
 							<td>${myClass.moduleName }</td>
@@ -147,7 +150,7 @@
 							<td>${myClass.openTime }</td>
 							<td>${myClass.week }</td>
 							<td>${myClass.dayOfWeek }</td>
-							<td><fmt:formatDate pattern="dd/MM/yyyy" value="${class.testDay }"></fmt:formatDate></td>
+							<td><fmt:formatDate pattern="dd/MM/yyyy" value="${myClass.testDay }"></fmt:formatDate></td>
 							<td>${myClass.kip }</td>
 							<td>${myClass.classAmount }</td>
 							<td>${myClass.testRoom }</td>
@@ -166,23 +169,44 @@
 	<!-- lop trong thi -->
 	<h1>Danh sach giam thi coi thi</h1>
 	<table class="table table-striped table-hover">
-		<tbody>
+	<thead>
+	<th></th>
+					<th>Ho va Ten</th>
+					<th>Mon hoc Giang day</th>
+					<th>So dien thoai</th>
+					<th>Email</th>
+					<th>
+					Xoa giam thi
+					</th>
+		</thead>
+		<tbody>	
 			<c:forEach items="${myClass.canBoCoiThi}" var="emp">
 				<tr>
+					<td></td>
 					<td>${emp.employeeName }</td>
 					<td>${emp.subject }</td>
 					<td>${emp.phoneNumber }</td>
 					<td>${emp.email }</td>
 					<td>
-					<form action="${pageContext.request.contextPath }/classes/${myClass.classId }/removeCanBoCoiThi/${emp.employeeId }"
+					<sec:authorize access="hasAuthority('ADMIN')">
+					<f:form action="${pageContext.request.contextPath }/classes/${myClass.classId }/removeCanBoCoiThi/${emp.employeeId }"
 	method="post">
 					<input type="submit" value="Xoa">
-					</form>
+					</f:form>
+					</sec:authorize>
 					</td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
+	<div style=" font-size:20px;text-align:center">
+		<c:if test="${myClass.classAmount > 50 && myClass.canBoCoiThi.size() < 2 }">Chua du giam thi</c:if>
+		<c:if test ="(${myClass.classAmount > 50 && myClass.canBoCoiThi.size() >= 2 })||
+		(${myClass.classAmount <= 50 && myClass.canBoCoiThi.size() >=1 })">
+		Đã đủ, nếu muốn thay đổi cán bộ coi thi hãy xóa danh sách trước
+		</c:if>
+		
+	</div>
 	<f:form	action="${pageContext.request.contextPath }/classes/updateCanBoCoiThi" method="post">
 					<input type = "text" name = "empId" placeholder="Nhap ma giang vien" required="required"/>
 					<input type="submit" value="Change">

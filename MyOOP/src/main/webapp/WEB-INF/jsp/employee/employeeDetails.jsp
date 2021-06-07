@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,6 +76,7 @@
 </script>
 </head>
 <body>
+<jsp:include page=".././header/header.jsp"></jsp:include>
 	<div class="container">
 		<div class="table-responsive">
 			<div class="table-wrapper">
@@ -114,12 +116,14 @@
 								<td>${employee.phoneNumber }</td>
 								<td>${employee.email }</td>
 								<td>${employee.office }</td>
+								<sec:authorize access="hasAnyAuthority('ADMIN')">
 								<td><a href="#editEmployeeModal" class="edit"
 									data-toggle="modal"><i class="material-icons"
 										data-toggle="tooltip" title="Edit">&#xE254;</i></a> <a
 									href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
 										class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
 									<input type="hidden" id="empId" value="${employee.employeeId }"></td>
+									</sec:authorize>
 							</tr>
 		
 							<!-- <input	type="hidden" id="updateEmpId" value="${employee.employeeId }">  -->
@@ -130,14 +134,44 @@
 				<h1>Danh sach lop coi thi</h1>
 				<table class="table table-striped table-hover">
 					<tbody>
+							<tr>
+							<td>Ten Hoc phan</td>
+							<td>Ma lop</td>
+							<td>Phai Tra</td>
+							</tr>
+					
 							<c:forEach items="${employee.classes }" var = "class">
 							<tr>
 							<td>${class.moduleName }</td>
 							<td>${class.classId }</td>
+							<td>${giatien*class.classAmount } VND</td>
+							
+							<sec:authorize access="hasAnyAuthority('ADMIN')">
+							<td><f:form action="${pageContext.request.contextPath }/employee/${employee.employeeId }/removeLopTrongThi/${class.classId }"
+ 							method="post"> 
+ 							<button>Delete</button></f:form>  
+							</td>
+							</sec:authorize>
 							</tr>
 							</c:forEach>
+							
+					<tr>
+							
+<%-- 							<c:forEach items="${employee.classes }" var = "class"> --%>
+<!-- 							<tr> -->
+<%-- 							<td>${class.moduleName }</td> --%>
+<%-- 							<td>${class.classId }</td> --%>
+							
+<!-- 							</tr> -->
+<%-- 							<sec:authorize access="hasAnyAuthority('ADMIN')"> --%>
+<%-- 							<td><a href="${pageContext.request.contextPath }/${employee.employeeId }/removeLopTrongThi/${class.classId }"> --%>
+<!-- 							<button>Delete</button></a> -->
+<!-- 							</td> -->
+<%-- 							</sec:authorize> --%>
+<%-- 							</c:forEach> --%>
 					</tbody>
 				</table>
+				<sec:authorize access="hasAnyAuthority('ADMIN')">
 				<f:form	action="${pageContext.request.contextPath }/employee/updateLopTrongThi"
 					method="post" modelAttribute="employee">
 					<input type = "text" name = "classId" placeholder="Nhap ma lop" required="required"/>
@@ -145,6 +179,58 @@
 					<input type="hidden" name="employeeId"
 						value="${employee.employeeId }">
 				</f:form>
+				
+<%-- 				<f:form action="${pageContext.request.contextPath }/employee/thanhtoan.htm" method="post"> --%>
+<%-- 				<input type="hidden" name = "empId" value="${employee.employeeId }">  --%>
+<!-- 				<input type="submit" value="Thanh toan"> -->
+<%-- 				</f:form> --%>
+				</sec:authorize>
+				
+				
+				<h1>Danh sach lop giang day</h1>
+				<table class="table table-striped table-hover">
+					<tbody>
+					       <tr>
+							<td>Ten Hoc phan</td>
+							<td>Ma lop</td>
+							<td>Phai Tra</td>
+							</tr>
+					
+							<c:forEach items="${employee.teachingClasses }" var = "class">
+							<tr>
+							<td>${class.moduleName }</td>
+							<td>${class.classId }</td>
+							<td>${giatien*class.classAmount } VND</td>
+							
+							</tr>
+							
+							</c:forEach>
+					</tbody>
+					<tr>
+							<td>Tong phai thanh toan</td>
+							<td>${tongtien } VND</td>
+							<td>
+							</tr>
+							
+				</table>
+				<sec:authorize access="hasAnyAuthority('ADMIN')">
+				<f:form	action="${pageContext.request.contextPath }/employee/updateLopDay"
+					method="post" modelAttribute="employee">
+					<input style="width:300px;height:30px" type = "text" name = "classId" placeholder="Nhap ma lop" required="required"/>
+					<input style="width:100px;height:30px" type="submit" value="Change">
+					<input type="hidden" name="employeeId"
+						value="${employee.employeeId }">
+				</f:form>
+				<f:form	action="${pageContext.request.contextPath }/employee/tratien"
+					method="post" modelAttribute="employee">
+					
+					<input style="width:100px;height:30px" type="submit" value="Thanh Toan">
+					<input type="hidden" name="employeeId"
+						value="${employee.employeeId }">
+					<input type="hidden" name = "tongThanhToan" value="${tongtien }">
+				</f:form>
+				<br></br>
+				</sec:authorize>
 			</div>
 		</div>
 	</div>

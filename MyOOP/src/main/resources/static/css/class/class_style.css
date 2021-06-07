@@ -5,16 +5,6 @@ body {
 			font-family: 'Varela Round', sans-serif;
 			font-size: 13px;
 		}
-		#navigation-link{
-		color: white;
-		text-decoration: none; 
-		}
-		#navigation-link a:link, #navigation-link a:visited{
-		color: white; 
-		}
-		#navigation-link a:hover{
-		color: red;
-		}
 		.table-responsive {
 			margin: 30px 0;
 		}
@@ -25,6 +15,16 @@ body {
 			border-radius: 3px;
 			box-shadow: 0 1px 1px rgba(0,0,0,.05);
 		}
+		#navigation-link a{
+			color:white;
+			text-decoration:none;
+		}
+		#navigation-link a:hover{
+			color:red
+		}
+/* 		#navigation-link a{ */
+/* 			color:white */
+/* 		} */
 		.table-title {        
 			padding-bottom: 15px;
 			background: #435d7d;
@@ -257,4 +257,19 @@ body {
 }
 .search-field{
 	margin-bottom: 85px;
+}
+#tongthanhtoan{
+	background-color: red;
+	opacity:30%;
+}
+.button {
+  font: bold 11px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 2px 6px 2px 6px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
 }

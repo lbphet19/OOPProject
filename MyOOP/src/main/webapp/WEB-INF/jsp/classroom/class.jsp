@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 	<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+	<%@taglib uri="http://www.springframework.org/tags/form" prefix="f"%>
 	<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+	<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,10 +25,53 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <c:url value="/css/class/class_style.css" var="jstlCss" />
 <link href="${jstlCss}" rel="stylesheet" >
+<head>
+	    <style>
+        .excel{
+            color:white;
+            background-color:#337ab7;
+            height: 40px;
+            
+        }
+        #getLable{
+			display: flex;
+            background-color: indigo;
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
+			height: 40px;
+			text-align: center;
+			align-items: center;
+			justify-content: center;
+			width: 145px;
+			float: left;
+			
+        }
+		#getLable:hover{
+			box-shadow:  inset 0 3px 5px rgb(0 0 0 / 13%);
+			background-color: #204d74;;
+		}
+        #function{
+            text-align:justify;
+
+        }
+		#chosen-file{
+			
+			height: 40px;
+			margin-top: 10px;
+			width: 150px;
+
+			
+		}
+	</style>
+</head>
 <script>
 	$(document).ready(function() {
 		// Activate tooltip
-		$('[data-toggle="tooltip"it]').tooltip();
+		$('[data-toggle="tooltip"]').tooltip();
 
 		// Select/Deselect checkboxes
 		var checkbox = $('table tbody input[type="checkbox"]');
@@ -50,29 +95,19 @@
 			var id = $(this).parent().find("#classId").val();
 			$('#deleteClassModal #deleteId').val(id);
 		});
-		$('table .edit').on('click',function() {
-			var id = $(this).parent().find("#empId").val();
-			$("#editClassModal #editId").val(id);
-							/*  goi controller lay model theo id  */
-			$.ajax({
-				type : 'GET',
-				url : '${pageContext.request.contextPath }'
-						+ '/employee/findById/'
-						+ id,
-				success : function(employee) {
-						/* name object phoneNumber email office */
-						$("#editEmployeeModal #update_name").val(employee.employeeName),
-						$("#editEmployeeModal #update_subject").val(employee.subject),
-						$("#editEmployeeModal #update_phoneNumber").val(employee.phoneNumber),
-						$("#editEmployeeModal #update_email").val(employee.email),
-						$("#editEmployeeModal #update_office").val(employee.office)
-				}
-			  })
-			});
+		$("#multiple-delete").on('click',function(){
+			
+			var checkedVals = $("input:checkbox[class=checkboxes]:checked").map(function(){
+				return $(this).val();
+			}).get();
+			alert(checkedVals);
+		})
 	});
+	
 </script>
 </head>
 <body>
+	<jsp:include page=".././header/header.jsp"></jsp:include>
 	<div class="container-fluid">
 		<div class="table-responsive">
 			<div class="table-wrapper">
@@ -84,14 +119,19 @@
 								<a href="${pageContext.request.contextPath }/employee/listEmp.htm/1">Manage <b>Employees</b></a>
 							</h2>
 						</div>
+						<sec:authorize access="hasAnyAuthority('ADMIN')">
 						<div class="col-xs-6">
 							<a href="${pageContext.request.contextPath }/classes/initCreate.htm" class="btn btn-success"
 								data-toggle="modal"><i class="material-icons">&#xE147;</i>
 								 <span>Add New Class</span></a> 
 							<a href="#deleteClassModal" class="btn btn-danger" 
-								data-toggle="modal"><i class="material-icons">&#xE15C;</i>
+								data-toggle="modal" id = "multiple-delete"><i class="material-icons">&#xE15C;</i>
 								 <span>Delete</span></a>
 						</div>
+						</sec:authorize>
+						<sec:authorize access="hasAnyAuthority('USER')">
+							
+						</sec:authorize>
 					</div>
 				</div>
 				<!-- search -->
@@ -107,6 +147,7 @@
 									<option value="" disabled selected>Tìm kiếm theo</option>
 									<option value="moduleId">Mã học phần</option>
 									<option value="moduleName">Tên học phần</option>
+									<option value="classId">Mã lớp</option>
 								</select>
 							</div>
 							<div class="col-lg-2 col-md-3 col-sm-12 p-0">
@@ -148,9 +189,9 @@
 					<tbody>
 						<c:forEach items="${listClass }" var="class">
 						<tr>
-							<td><span class="custom-checkbox"> <input
-									type="checkbox" id="checkbox1" name="options[]" value="1">
-									<label for="checkbox1"></label>
+							<td><span class="custom-checkbox"> <input class = "checkboxes"
+									type="checkbox" name="options[]" id = "${class.classId }" value="${class.classId }">
+									<label for="${class.classId }"></label>
 							</span></td>
 							<td>${class.classId }</td>
 							<td>${class.moduleId }</td>
@@ -165,11 +206,16 @@
 							<td>${class.classAmount }</td>
 							<td>${class.testRoom }</td>
 							<td><a href="${pageContext.request.contextPath }/classes/details/${class.classId}">Details</a></td>
+							<sec:authorize access="hasAnyAuthority('ADMIN')">
 							<td><a href="${pageContext.request.contextPath }/classes/initUpdate.htm?classId=${class.classId }" class="edit">
+								
 								<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a> 
 								<a href="#deleteClassModal" class="delete" data-toggle="modal">
 								<i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
 								<input type="hidden" id="classId" name = "classId" value="${class.classId }">
+								
+								</sec:authorize> 
+								
 							</td>
 						</tr>
 						</c:forEach>
@@ -219,14 +265,29 @@
 		</div>
 	</div>
 	<!-- download -->
+	 <div id="function">
+	<!-- download -->
 	<a href="${pageContext.request.contextPath }/excel/download" class="btn btn-primary btn-lg active"
-	 role="button" aria-pressed="true">Download</a>
+	 role="button" aria-pressed="true" style="margin: 10px;">Download</a>
 	 <!-- upload  -->
-	<h2>Upload an excel file</h2>
-	<form action="${pageContext.request.contextPath }/excel/upload" method="post" enctype="multipart/form-data">
-		<input type="file" name = "excelFile" value="Chon tep">
-		<input type="submit" value="Upload">
-	</form>
+	
+	<f:form action="${pageContext.request.contextPath }/excel/upload" style="margin-left: 10px;" method="post" enctype="multipart/form-data">
+		
+        <input id="getExcel" class="excel" type="file" name = "excelFile" value="Chon tep" style="display: none;">
+		
+		<label id="getLable" for="getExcel" >Upload Excel File</label>
+		<input id='chosen-file'  value="No chosen File" readonly></input>
+		<input class="excel" type="submit" value="Upload">
+	</f:form>
+    </div>
+	<script>
+		const fileChosen=document.getElementById("chosen-file");
+		const getFileButton=document.getElementById("getExcel");
+		getFileButton.addEventListener('change',function(){
+			fileChosen.value = this.files[0].name;
+
+		})
+	</script>
 	<!-- for each element -> nut delete /{id}  -->
 	<!-- Delete Modal HTML -->
 	<div id="deleteClassModal" class="modal fade">

@@ -1,5 +1,7 @@
 package com.project.services;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,13 @@ public class ClassServiceImp implements ClassService {
 	public List<Class> get() {
 		// TODO Auto-generated method stub
 		return classRepo.findAll();
+	}
+	@Override
+	public String formatDateToExcel(Date date) {
+		
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        String strDate = formatter.format(date);
+        return strDate;
 	}
 //	crud, getById
 	@Override
@@ -60,6 +69,16 @@ public class ClassServiceImp implements ClassService {
 	public Page<Class> findByModuleIdAndModuleName(String keyword, Pageable pageable) {
 		// TODO Auto-generated method stub
 		return classRepo.findByModuleIdAndModuleName(keyword, pageable);
+	}
+	@Override
+	public Page<Class> findByClassId(String classId,Pageable pageable) {
+		// TODO Auto-generated method stub
+		return classRepo.findByClassId(classId, pageable);
+	}
+	@Override
+	public Page<Class> findByModuleIdAndModuleNameAndClassId(String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return classRepo.findByModuleIdAndModuleNameAndClassId(keyword, pageable);
 	}
 	
 }

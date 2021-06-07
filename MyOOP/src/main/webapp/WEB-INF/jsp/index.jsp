@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath }/employee/listEmp.htm">Quan ly giang vien</a>
+	<a href="${pageContext.request.contextPath }/employee/listEmp.htm/1">Quan ly giang vien</a>
 </body>
 </html>
